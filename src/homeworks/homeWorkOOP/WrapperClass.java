@@ -1,4 +1,4 @@
-package homeWorkOOP;
+package homeworks.homeWorkOOP;
 
 public class WrapperClass {
     public static void main(String[] args){
