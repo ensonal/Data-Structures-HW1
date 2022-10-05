@@ -36,22 +36,6 @@ public class TicTacToe {
                 continue;
             }
         }
-
-        while(game.getWinner() == EMPTY){
-            System.out.println("Player 1");
-            game.putMark(scr.nextInt(),scr.nextInt());
-            System.out.println("Player 2");
-            game.putMark(scr.nextInt(),scr.nextInt());
-            game.printBoard();
-
-            if(game.getWinner() == X){
-                System.out.println("Winner is Player 1!");
-            }else if(game.getWinner() == O){
-                System.out.println("Winner is Player 2!");
-            }else{
-                continue;
-            }
-        }
     }
 
     public static final int X = 1, O = -1, EMPTY = 0;
