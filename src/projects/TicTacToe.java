@@ -1,99 +1,139 @@
 package projects;
 
+import java.util.Scanner;
+
+/*
+ *@author Muhammed Enes Onal / 20170808007
+ */
+
 public class TicTacToe {
+
     public static void main(String[] args){
-        TicTacToe game1 = new TicTacToe();
-        game1.putMark(1,1); game1.putMark(0,2);
-        game1.putMark(2,2); game1.putMark(0,0);
-        game1.putMark(0,1); game1.putMark(2,1);
-        game1.putMark(1,2); game1.putMark(1,0);
-        game1.putMark(2,0);
+        System.out.println("Tic-Tac-Toe GAME");
+        TicTacToe game = new TicTacToe();
+        game.printBoard();
 
-        System.out.println(game1);
+        System.out.println("Player will play first. Enter a index number.");
+        Scanner scr = new Scanner(System.in);
 
-        int winningPlayer= game1.winner( );
-        String[ ] outcome= {"O wins", "Tie", "X wins"};
-        System.out.println(outcome[1 + winningPlayer]);
+        while(game.getWinner() == EMPTY){
+            try{
+                System.out.println("Player 1");
+                game.putMark(scr.nextInt(),scr.nextInt());
+                System.out.println("Player 2");
+                game.putMark(scr.nextInt(),scr.nextInt());
+                game.printBoard();
+            }catch(IllegalArgumentException ex){
+                System.out.println("Invalid board position, re-enter slot number.");
+                continue;
+            }
 
+            if(game.getWinner() == X){
+                System.out.println("Winner is Player 1!");
+            }else if(game.getWinner() == O){
+                System.out.println("Winner is Player 2!");
+            }else{
+                continue;
+            }
+        }
 
+        while(game.getWinner() == EMPTY){
+            System.out.println("Player 1");
+            game.putMark(scr.nextInt(),scr.nextInt());
+            System.out.println("Player 2");
+            game.putMark(scr.nextInt(),scr.nextInt());
+            game.printBoard();
+
+            if(game.getWinner() == X){
+                System.out.println("Winner is Player 1!");
+            }else if(game.getWinner() == O){
+                System.out.println("Winner is Player 2!");
+            }else{
+                continue;
+            }
+        }
     }
 
-    public static final int X=1, O=-1; // players
-    public static final int EMPTY = 0; // empty cell
-    private int board[][] = new int[3][3];
-    private int player; // current player
+    public static final int X = 1, O = -1, EMPTY = 0;
+    private int[][] board;
+    private int currentPlayer;
 
-    /**Constructor */
     public TicTacToe() {
-        clearBoard();
+        this.board = new int[3][3];
+        this.currentPlayer = X;
     }
 
-    /** Clears the board */
-    public void clearBoard(){
-        for(int i=0; i<3; i++){
-            for(int j=0; j<3; j++){
-                board[i][j] = EMPTY; // every cell should be empty.
-                player = X; // the first player is X.
+    private final static int[][][] winnerIndices = {
+            {{0,0}, {0,1}, {0,2}},
+            {{1,0}, {1,1}, {1,2}},
+            {{2,0}, {2,1}, {2,2}},
+
+            {{0,0}, {1,0}, {2,0}},
+            {{0,1}, {1,1}, {2,1}},
+            {{0,2}, {1,2}, {2,2}},
+
+            {{0,0}, {1,1}, {2,2}},
+            {{0,2}, {1,1}, {2,0}},
+    };
+
+    public void putMark(int i, int j) throws IllegalArgumentException {
+        if ((i < 0) || (i > 2) || (j < 0) || (j > 2))
+            throw new IllegalArgumentException("Invalid board position");
+        if (board[i][j] != EMPTY)
+            throw new IllegalArgumentException("Board position occupied");
+
+        board[i][j] = currentPlayer;
+        currentPlayer = -1 * currentPlayer;
+    }
+
+    public boolean isWinner(int player) {
+
+        for(int[][] positions: winnerIndices){
+            int sum = 0;
+            for(int[] position: positions){
+                sum += board[position[0]][position[1]];
             }
+            if(sum == player *3)
+                return true;
         }
+        return false;
     }
 
-    /** Puts an X or O mark at position i,j. */
-    public void putMark(int i, int j) throws IllegalArgumentException{
-        if((i<0) || (i>2) || (j<0)|| (j>2)){
-            throw new IllegalArgumentException("Invalid board position.");
-        }
-        if(board[i][j] != EMPTY){
-            throw new IllegalArgumentException("Board position occupied.");
-        }
-        board[i][j] = player; // place the mark for the current player.
-        player = -player; // switch players (uses fact that O = - X).
-    }
 
-    /** Checks whether the board configuration is a win for the given player. */
-    public boolean isWin(int mark){
-        return((board[0][0] + board[0][1] + board[0][2] == mark*3) // row 0
-        || (board[1][0] + board[1][1] + board[1][2] == mark*3) // row 1
-        || (board[2][0] + board[2][1] + board[2][2] == mark*3) // row 2
-        || (board[0][0] + board[1][0] + board[2][0] == mark*3) // column 0
-        || (board[0][1] + board[1][1] + board[2][1] == mark*3) // column 1
-        || (board[0][2] + board[1][2] + board[2][2] == mark*3) // column 2
-        || (board[0][0] + board[1][1] + board[2][2] == mark*3) // diagonal
-        || (board[2][0] + board[1][1] + board[0][2] == mark*3)); // rev diag
-    }
-
-    /** Returns the winning player's code, or 0 to indicate a tie (or unfinished game).*/
-    public int winner(){
-        if(isWin(X)){
+    public int getWinner(){
+        if (isWinner(X))
             return X;
-        }else if(isWin(O)){
+        else if (isWinner(O))
             return O;
-        }else{
-            return 0;
+        else
+            return EMPTY;
+    }
+
+    public void printBoard() {
+        for(int[] line: this.board){
+            for(int cell: line){
+                if(cell == X){
+                    System.out.print("X");
+                }
+                else if(cell == O){
+                    System.out.print("O");
+                }
+                else if(cell == EMPTY){
+                    System.out.print("-");
+                }
+            }
+            System.out.println();
         }
     }
 
-    /** Returns a simple character string showing the current board. */
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i<3; i++){
-            for(int j=0; j<3; j++){
-                switch (board[i][j]){
-                    case X: sb.append("X");
-                    break;
-                    case O: sb.append("O");
-                    break;
-                    case EMPTY: sb.append(" ");
-                    break;
-                }
-                if(j<2){
-                    sb.append("|"); // Column boundary
-                }
-            }
-            if(i<2){
-                sb.append("\n-----\n"); // Row boundary
+
+    public boolean isAvailablePositionExists(){
+        for(int[] line: this.board){
+            for(int cell: line){
+                if(cell == 0)
+                    return true;
             }
         }
-        return sb.toString( );
+        return false;
     }
 }
