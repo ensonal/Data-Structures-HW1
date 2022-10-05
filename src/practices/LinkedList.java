@@ -2,8 +2,6 @@ package practices;
 
 class Main{
     public static void main(String[] args){
-       
-
         LinkedList<Integer> l1 = new LinkedList(); // Eğer linkedlist ıntegersa Node da integer gelmek zorunda
         System.out.println(l1.isEmpty());
 
@@ -14,7 +12,6 @@ class Main{
         System.out.println(l1.isEmpty());
 
         l1.print();
-        
     }
 }
 
@@ -22,15 +19,12 @@ class Node<E>{
     private E value;
     private Node<E> next;
 
-
-    public Node() {
-    }
+    public Node() { }
 
     public Node(E value) {
         this.value = value; 
     }
     
-
     public E getValue() {
         return this.value;
     }
@@ -53,9 +47,6 @@ class LinkedList<E>{
     Node<E> head;
     Node<E> tail;
 
-
-
-
     public boolean isEmpty(){
         if(head == null){
             return true;
@@ -67,27 +58,22 @@ class LinkedList<E>{
 
     public void addLast(E value){
         Node<E> newNode = new Node(value);
-            if(head == null){
-                head = newNode;
-            }else{
-                tail.setNext(newNode);
-            }
-            tail = newNode;
+        if(head == null){
+            head = newNode;
+        }else{
+            tail.setNext(newNode);
+        }
+        tail = newNode;
     }
-    
-    
+
     public void print(){
         this.print(head);
- 
     }
         
-    
-
     private void print(Node<E> node){
         if(node == null){
             return;
         }
-
         System.out.println(node.getValue());
         print(node.getNext());
     }
