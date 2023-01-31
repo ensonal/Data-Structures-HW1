@@ -1,7 +1,7 @@
 
 # Data Structures Works
 
-It contains my practicies, homeworks and simple projects for Data Structures and Algorithm course.
+It contains my practices, homeworks and simple projects for Data Structures and Algorithm course.
 
 Java was used for all of them.
 
